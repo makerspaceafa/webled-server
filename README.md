@@ -23,7 +23,7 @@ Código do Arduino está [neste repo](https://github.com/makerspaceafa/webled-ar
 
 ## Configuração
 No ficheiro *main.js*:  
-Obrigatório definir arduinoPort e devicePort!  
+Obrigatório definir **arduinoPort** e **devicePort**!  
 ![imagem](readme_images/config.png)  
 
 Uma maneira fácil de descobrir em que port está o Arduinio é usar o Arduino IDE, que normalmente reconhece automaticamente e avisa:  
