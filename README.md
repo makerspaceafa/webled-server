@@ -19,6 +19,7 @@ Código do Arduino está [neste repo](https://github.com/makerspaceafa/webled-ar
 - `git clone https://github.com/makerspaceafa/webled-server.git`
 - `cd webled`
 - `npm install`
+##### Sim, é normal demorar molhos a fazer o 'npm install'. A biblioteca opencv4nodejs que estamos a usar é compilada do zero quando corres este comando... Se descobrirem maneira melhor sejam bem-vindos!
 
 ## Configuração
 No ficheiro *main.js*:  
