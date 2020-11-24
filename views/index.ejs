@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt">
+    <head>
+        <title>Habla comigo baby!</title>
+
+        <!-- icons gerados com https://realfavicongenerator.net/ -->
+        <link rel="apple-touch-icon" sizes="180x180" href="icon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="icon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="icon/favicon-16x16.png">
+        <link rel="manifest" href="icon/site.webmanifest">
+        <link rel="mask-icon" href="icon/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+
+        <!-- vamos buscar o jquery e o sockets.io (2 libraries usadas) a CDNs -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.1/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- A nossa CSS stylesheet -->
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+
+    <body>
+        <div id="img-cont">
+            <img id="image" src="" alt=""/>
+        </div>
+
+
+        <div id="content">
+            <ul id="messages"></ul>
+            <form action="/" method="POST" id="chatForm">
+                <input id="txt" autocomplete="off" placeholder="type your message here..." /><button>Send</button>
+            </form>
+
+            <script>
+                // connect to our server socket
+                let socket = io.connect(`${window.location.hostname.toString()}:${window.location.port.toString()}`);
+
+                // Enviar o nosso username para o servidor
+                socket.emit('username', '<%= posto %>');
+
+                // rate limit messages
+                let lastmsg = 0;
+
+                // submit text message without reload/refresh the page
+                $('form').submit(function(event){
+
+                    // ratelimit é onde configuramos os segundos que os utilizadores devem esperar
+                    // o facto de isto ser definido client side might make it hackable idk
+                    const ratelimit = 5;
+                    // hold guarda os segundos que falta esperar
+                    const hold = ratelimit - (Date.now() - lastmsg)/1000;
+
+                    // esta variavel guarda o campo de texto onde se escreve as mensagens
+                    let txt = $('#txt');
+
+                    // Se existir texto na caixa
+                    if(txt.val()) {
+
+                        // Se hold <= 0 significa que já passaram ratelimit segundos desde a ultima msg
+                        if(hold <= 0) {
+                            // reset tempo da ultima msg
+                            lastmsg = Date.now();
+                            // emitir a mensagem para o servidor
+                            socket.emit('chat_message', txt.val());
+                            // limpar a textbox
+                            txt.val('');
+                        }
+                        // se não passou o tempo definido ainda, enviar a dica do aguarda pff.
+                        else $('#messages').append($('<li>').html('<i>Por favor espere ' + Math.ceil(hold) + 's antes de enviar outra mensagem.</i>'));
+                    }
+
+                    // prevents page reloading & POST request
+                    // a mesma coisa que chamar event.preventDefault() e event.stopPropagation()
+                    return false;
+                });
+
+                // Quando recebemos uma msg do server, adicionar à página.
+                socket.on('chat_message', function(msg){
+                    $('#messages').append($('<li>').html(msg));
+                });
+
+                // Evento is_online é enviado pelo servidor quando um novo utilizador se junta
+                socket.on('is_online', function(username) {
+                    $('#messages').append($('<li>').html(username));
+                });
+
+                // Evento image são as frames enviadas pelo servidor, de acordo com os FPS configurados
+                socket.on('image', (image) => {
+                    const imageElm = document.getElementById('image');
+                    // vamos espetar o codigo base64 no img element do html
+                    // não esquecer de juntar as dicas "data:image/jpeg;base64" para o browser saber intrepretar aquilo
+                    imageElm.src=`data:image/jpeg;base64,${image}`;
+                });
+            </script>
+        </div>
+    </body>
+</html>
