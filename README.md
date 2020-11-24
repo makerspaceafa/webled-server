@@ -1,4 +1,5 @@
-### asd
+#### Este é o código server side, que incluí o serviço chat e o webcam stream.
+Código do Arduino está [neste repo](https://github.com/makerspaceafa/webled-arduino).
 
 ## Instalação
 
@@ -9,12 +10,13 @@
 #### Windows
 - Instalar Node.js
 - Instalar CMake
+- Fazer clone do repo / descarregar o projeto
 - Dentro do projeto correr os seguintes comandos:
   - `npm install --global windows-build-tools`
   - `npm install`
 #### Linux & etc
 - `sudo apt install nodejs cmake` (ou o teu package manager)
-- `git clone`
+- `git clone https://github.com/makerspaceafa/webled-server.git`
 - `cd webled`
 - `npm install`
 
