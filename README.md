@@ -34,3 +34,8 @@ Se chegaste até aqui sem problemas parabéns!
 Se chegaste até aqui depois de resolver os problemas todos que apareceram sozinh@, ainda mais de parabéns estás!
 
 Agora basta o comando `node main.js` dentro do project folder!
+### Whoop ia-me esquecendo mas atenção! Não correr sem o condensador!
+O Arduino tem a mania de fazer reset quando recebe informação pela serial port!  
+Isto é mau porque não queremos que esteja sempre a fazer reset cada vez que enviamos as mensagens.  
+Para impedir estes resets está espetado **condensador do 100nF entre os pins GND e RST**.  
+Se não tiverem um condensador destes, outras soluções são discutidas [aqui](https://playground.arduino.cc/Main/DisablingAutoResetOnSerialConnection/).
