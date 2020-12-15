@@ -23,7 +23,7 @@ const FPS = 15;
 // Quando o pc tem várias webcams é só ir incrementando até encontrarmos a certa.
 const vCap = new cv.VideoCapture(0);
 
-// IP addr onde o servidor está a ouvir requets
+// IP addr onde o servidor está a ouvir requests
 // Deixar em branco => default IPv6 [::] e na maior parte dos sistemas IPv4 0.0.0.0 também
 // 0.0.0.0 to enforce IPv4
 // Nota: idealmente o objetivo é ter as coisas a correr em IPv6 mas eu não percebo muito disso ¯\_(ツ)_/¯
@@ -98,7 +98,7 @@ setInterval(() => {
     io.emit('image', image);
 }, 1000 / FPS);
 
-// todo: better video streaming
+// todo: better video streaming possible?
 // I have a slight feeling that encoding images as base64 might not be the best way to do live video streams.
 // Can you debunk this or find a better way to do it?
 // ------------------------------------------------------------------------------------------------
@@ -114,9 +114,11 @@ app.use(express.static('public'));
 app.get('/:tag?', function(req, res) {
 
     let posto;
+    // custom roles based on url path
+    // change as you see fit
     switch (req.params.tag) {
         case 'a':
-            posto = 'Aspirante';
+            posto = 'Sh@ Aspirante';
             break;
         case 'j':
             posto = 'Jéssica';
@@ -124,11 +126,11 @@ app.get('/:tag?', function(req, res) {
         case 'n':
             posto = 'Ninja';
             break;
-        case 'ba':
-            posto = 'Aleixo';
+        case 'c':
+            posto = 'Sh@ Cadete';
             break;
         default:
-            posto = 'Cadete';
+            posto = 'Pessoa';
     }
     res.render('index.ejs', {'posto':posto});
 });
@@ -140,7 +142,7 @@ io.sockets.on('connection', function(socket) {
     // Event username -> quando alguém entra
     socket.on('username', function(username) {
         if(username === "Jéssica") socket.username = 'Jéssica';
-        else socket.username = 'Sh@ ' + username + ' ' + (Math.floor(Math.random() * 100) + 1);
+        else socket.username = username + ' ' + (Math.floor(Math.random() * 100) + 1);
         io.emit('is_online', '🔵 <i>' + socket.username + ' joined.</i>');
     });
 
